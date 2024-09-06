@@ -97,8 +97,8 @@ spring.jpa.show-sql=true
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/bookstore-api.git
-   cd bookstore-api
+   git clone https://github.com/Leonardo0159/bookstore-jpa.git
+   cd bookstore-jpa
    ```
 
 2. Compile e execute o projeto:
