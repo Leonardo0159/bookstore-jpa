@@ -130,7 +130,7 @@ Você pode utilizar o **Postman** ou outra ferramenta similar para testar os end
 }
 ```
 
-#### Livro:
+#### Book:
 ```json
 {
   "title": "The Pragmatic Programmer",
