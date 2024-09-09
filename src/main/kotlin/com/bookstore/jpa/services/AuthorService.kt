@@ -1,5 +1,6 @@
 package com.bookstore.jpa.services
 
+import com.bookstore.jpa.exceptions.AuthorNotFoundException
 import com.bookstore.jpa.models.AuthorModel
 import com.bookstore.jpa.repositories.AuthorRepository
 import org.springframework.stereotype.Service
@@ -15,8 +16,8 @@ class AuthorService(
         return authorRepository.findAll()
     }
 
-    fun findById(id: Long): Optional<AuthorModel> {
-        return authorRepository.findById(id)
+    fun findById(id: Long): AuthorModel {
+        return authorRepository.findById(id).orElseThrow { AuthorNotFoundException("Author id ${id} not found") }
     }
 
     @Transactional
@@ -33,7 +34,7 @@ class AuthorService(
             )
             authorRepository.save(updatedAuthor)
         } else {
-            null
+            throw AuthorNotFoundException("Author id ${id} not found")
         }
     }
 
@@ -41,6 +42,8 @@ class AuthorService(
     fun deleteById(id: Long) {
         if (authorRepository.existsById(id)) {
             authorRepository.deleteById(id)
+        } else {
+            throw AuthorNotFoundException("Author id ${id} not found")
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.bookstore.jpa.services
 
 import com.bookstore.jpa.dto.BookDTO
+import com.bookstore.jpa.exceptions.AuthorNotFoundException
+import com.bookstore.jpa.exceptions.BookNotFoundException
+import com.bookstore.jpa.exceptions.PublisherNotFoundException
 import com.bookstore.jpa.models.BookModel
 import com.bookstore.jpa.models.ReviewModel
 import com.bookstore.jpa.repositories.AuthorRepository
@@ -21,22 +24,23 @@ class BookService(
         return bookRepository.findAll()
     }
 
-    fun findById(id: Long): Optional<BookModel> {
-        return bookRepository.findById(id)
+    fun findById(id: Long): BookModel {
+        return bookRepository.findById(id).orElseThrow() { BookNotFoundException("Book id ${id} not found") }
     }
 
     @Transactional
     fun save(bookDTO: BookDTO): BookModel {
         // Busca o Publisher pelo ID
         val publisher = publisherRepository.findById(bookDTO.publisherId)
-            .orElseThrow { RuntimeException("Publisher not found") }
+            .orElseThrow { PublisherNotFoundException() }
 
         // Busca os Authors pelos IDs
         val authors = authorRepository.findAllById(bookDTO.authorIds)
         if (authors.size != bookDTO.authorIds.size) {
-            throw RuntimeException("Some authors not found")
+            throw AuthorNotFoundException()
         }
 
+        // Utilizar pattern factory
         // Cria o Review
         val review = ReviewModel(
             comment = bookDTO.review,
@@ -60,11 +64,11 @@ class BookService(
         val existingBook = bookRepository.findById(id)
         return if (existingBook.isPresent) {
             val publisher = publisherRepository.findById(bookDTO.publisherId)
-                .orElseThrow { RuntimeException("Publisher not found") }
+                .orElseThrow { PublisherNotFoundException() }
 
             val authors = authorRepository.findAllById(bookDTO.authorIds)
             if (authors.size != bookDTO.authorIds.size) {
-                throw RuntimeException("Some authors not found")
+                throw AuthorNotFoundException()
             }
 
             val updatedBook = existingBook.get().copy(
@@ -76,7 +80,7 @@ class BookService(
 
             bookRepository.save(updatedBook)
         } else {
-            null
+            throw BookNotFoundException("Book id ${id} not found")
         }
     }
 
@@ -84,6 +88,8 @@ class BookService(
     fun deleteById(id: Long) {
         if (bookRepository.existsById(id)) {
             bookRepository.deleteById(id)
+        } else {
+            throw BookNotFoundException("Book id ${id} not found")
         }
     }
 }

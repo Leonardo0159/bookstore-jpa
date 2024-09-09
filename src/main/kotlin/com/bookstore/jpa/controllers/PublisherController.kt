@@ -22,11 +22,7 @@ class PublisherController(
     @GetMapping("/{id}")
     fun getPublisherById(@PathVariable id: Long): ResponseEntity<PublisherModel> {
         val publisher = publisherService.findById(id)
-        return if (publisher.isPresent) {
-            ResponseEntity.ok(publisher.get())
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(publisher)
     }
 
     @PostMapping
@@ -41,20 +37,12 @@ class PublisherController(
         @RequestBody publisher: PublisherModel
     ): ResponseEntity<PublisherModel> {
         val updatedPublisher = publisherService.update(id, publisher)
-        return if (updatedPublisher != null) {
-            ResponseEntity.ok(updatedPublisher)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(updatedPublisher)
     }
 
     @DeleteMapping("/{id}")
     fun deletePublisher(@PathVariable id: Long): ResponseEntity<Void> {
-        return if (publisherService.findById(id).isPresent) {
-            publisherService.deleteById(id)
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        publisherService.deleteById(id)
+        return ResponseEntity.noContent().build()
     }
 }

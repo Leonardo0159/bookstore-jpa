@@ -22,11 +22,7 @@ class AuthorController(
     @GetMapping("/{id}")
     fun getAuthorById(@PathVariable id: Long): ResponseEntity<AuthorModel> {
         val author = authorService.findById(id)
-        return if (author.isPresent) {
-            ResponseEntity.ok(author.get())
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(author)
     }
 
     @PostMapping
@@ -41,20 +37,12 @@ class AuthorController(
         @RequestBody author: AuthorModel
     ): ResponseEntity<AuthorModel> {
         val updatedAuthor = authorService.update(id, author)
-        return if (updatedAuthor != null) {
-            ResponseEntity.ok(updatedAuthor)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(updatedAuthor)
     }
 
     @DeleteMapping("/{id}")
     fun deleteAuthor(@PathVariable id: Long): ResponseEntity<Void> {
-        return if (authorService.findById(id).isPresent) {
-            authorService.deleteById(id)
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        authorService.deleteById(id)
+        return ResponseEntity.noContent().build()
     }
 }

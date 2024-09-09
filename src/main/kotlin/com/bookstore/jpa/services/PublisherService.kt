@@ -1,5 +1,6 @@
 package com.bookstore.jpa.services
 
+import com.bookstore.jpa.exceptions.PublisherNotFoundException
 import com.bookstore.jpa.models.PublisherModel
 import com.bookstore.jpa.repositories.PublisherRepository
 import org.springframework.stereotype.Service
@@ -15,8 +16,8 @@ class PublisherService(
         return publisherRepository.findAll()
     }
 
-    fun findById(id: Long): Optional<PublisherModel> {
-        return publisherRepository.findById(id)
+    fun findById(id: Long): PublisherModel {
+        return publisherRepository.findById(id).orElseThrow() { PublisherNotFoundException("Publisher id ${id} not found") }
     }
 
     @Transactional
@@ -33,7 +34,7 @@ class PublisherService(
             )
             publisherRepository.save(updatedPublisher)
         } else {
-            null
+            throw PublisherNotFoundException("Publisher id ${id} not found")
         }
     }
 
@@ -41,6 +42,8 @@ class PublisherService(
     fun deleteById(id: Long) {
         if (publisherRepository.existsById(id)) {
             publisherRepository.deleteById(id)
+        } else {
+            throw PublisherNotFoundException("Publisher id ${id} not found")
         }
     }
 }

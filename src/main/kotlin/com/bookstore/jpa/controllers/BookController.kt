@@ -22,11 +22,7 @@ class BookController(
     @GetMapping("/{id}")
     fun getBookById(@PathVariable id: Long): ResponseEntity<BookModel> {
         val book = bookService.findById(id)
-        return if (book.isPresent) {
-            ResponseEntity.ok(book.get())
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(book)
     }
 
     @PostMapping
@@ -41,20 +37,12 @@ class BookController(
         @RequestBody bookDTO: BookDTO
     ): ResponseEntity<BookModel> {
         val updatedBook = bookService.update(id, bookDTO)
-        return if (updatedBook != null) {
-            ResponseEntity.ok(updatedBook)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(updatedBook)
     }
 
     @DeleteMapping("/{id}")
     fun deleteBook(@PathVariable id: Long): ResponseEntity<Void> {
-        return if (bookService.findById(id).isPresent) {
-            bookService.deleteById(id)
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        bookService.deleteById(id)
+        return ResponseEntity.noContent().build()
     }
 }
