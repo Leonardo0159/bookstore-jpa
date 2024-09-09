@@ -1,6 +1,3 @@
 package com.bookstore.jpa.exceptions
 
-class PublisherNotFoundException : RuntimeException {
-    constructor() : super("Publisher not found!")
-    constructor(message: String) : super(message)
-}
+class PublisherNotFoundException(message: String = "Publisher not found!") : RuntimeException(message)
