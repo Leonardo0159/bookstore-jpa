@@ -25,7 +25,7 @@ data class BookModel(
         joinColumns = [JoinColumn(name = "book_id")],
         inverseJoinColumns = [JoinColumn(name = "author_id")]
     )
-    var authors: List<AuthorModel> = ArrayList(),
+    var authors: MutableList<AuthorModel> = mutableListOf(),
 
     // Um livro para um Review
     @JsonManagedReference
