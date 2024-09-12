@@ -2,7 +2,6 @@ package com.bookstore.jpa.services
 
 import com.bookstore.jpa.exceptions.AuthorNotFoundException
 import com.bookstore.jpa.models.AuthorModel
-import com.bookstore.jpa.models.BookModel
 import com.bookstore.jpa.repositories.AuthorRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -59,11 +58,9 @@ class AuthorServiceTest {
     @Test
     @DisplayName("Test Update Author")
     fun testUpdateAuthor() {
-        val existingBook = AuthorModel(id = 1L, name = "Old Author")
+        `when`(authorRepository.findById(any())).thenReturn(Optional.of(author))
 
-        `when`(authorRepository.findById(any())).thenReturn(Optional.of(existingBook))
-
-        val updatedAuthor = existingBook.copy(
+        val updatedAuthor = author.copy(
             name = "New Author"
         )
 

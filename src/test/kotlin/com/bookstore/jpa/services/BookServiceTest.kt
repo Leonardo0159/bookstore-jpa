@@ -10,7 +10,6 @@ import com.bookstore.jpa.models.PublisherModel
 import com.bookstore.jpa.repositories.AuthorRepository
 import com.bookstore.jpa.repositories.BookRepository
 import com.bookstore.jpa.repositories.PublisherRepository
-import com.bookstore.jpa.services.BookService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -20,7 +19,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.MockitoAnnotations
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -136,24 +134,15 @@ class BookServiceTest {
     @Test
     @DisplayName("Test Update Book")
     fun testUpdateBook() {
-        // Configura os dados do livro existente
-        val existingBook = BookModel(
-            id = 1L,
-            title = "Old Test Book",
-            publisher = publisher,
-            authors = mutableListOf(author1, author2),
-            review = null
-        )
-
         // Simula o comportamento de encontrar o livro existente
-        `when`(bookRepository.findById(any())).thenReturn(Optional.of(existingBook))
+        `when`(bookRepository.findById(any())).thenReturn(Optional.of(bookModel))
 
         // Simula o comportamento de encontrar o Publisher e os Authors
         `when`(publisherRepository.findById(1L)).thenReturn(Optional.of(publisher))
         `when`(authorRepository.findAllById(listOf(1L, 2L))).thenReturn(mutableListOf(author1, author2))
 
         // Configura o livro atualizado
-        val updatedBook = existingBook.copy(
+        val updatedBook = bookModel.copy(
             title = bookDTO.title,
             publisher = publisher,
             authors = mutableListOf(author1, author2),
