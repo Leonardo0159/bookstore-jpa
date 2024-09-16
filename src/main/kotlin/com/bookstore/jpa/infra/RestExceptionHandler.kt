@@ -1,12 +1,8 @@
 package com.bookstore.jpa.infra
 
-import com.bookstore.jpa.exceptions.AuthorNotFoundException
-import com.bookstore.jpa.exceptions.BookNotFoundException
-import com.bookstore.jpa.exceptions.PublisherNotFoundException
+import com.bookstore.jpa.exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
@@ -42,5 +38,30 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse)
     }
 
+    @ExceptionHandler(UserNotFoundException::class)
+    fun userNotFoundHandler(exception: UserNotFoundException): ResponseEntity<RestErrorMessage> {
+        val threatResponse = RestErrorMessage(
+            status = HttpStatus.NOT_FOUND,
+            message = exception.message ?: "User not found"
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse)
+    }
 
+    @ExceptionHandler(InvalidCredentialsException::class)
+    fun invalidCredentialsHandler(exception: InvalidCredentialsException): ResponseEntity<RestErrorMessage> {
+        val threatResponse = RestErrorMessage(
+            status = HttpStatus.UNAUTHORIZED,
+            message = exception.message ?: "Invalid credentials"
+        )
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(threatResponse)
+    }
+
+    @ExceptionHandler(EmailAlreadyUsedException::class)
+    fun emailAlreadyUsedHandler(exception: EmailAlreadyUsedException): ResponseEntity<RestErrorMessage> {
+        val threatResponse = RestErrorMessage(
+            status = HttpStatus.BAD_REQUEST,
+            message = exception.message ?: "Email already in use"
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse)
+    }
 }
