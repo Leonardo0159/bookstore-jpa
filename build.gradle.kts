@@ -27,6 +27,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.auth0:java-jwt:4.4.0")
 	implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.apache.httpcomponents.client5:httpclient5:5.2")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
